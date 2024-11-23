@@ -1,17 +1,78 @@
 {
-  "name": "hilbert-curve",
-  "version": "2.0.5",
+  "name": "@environment-safe/hilbert-curve",
+  "version": "3.0.0",
   "description": "Hilbert curve mapping",
-  "main": "dist/hilbert-curve.umd.js",
-  "module": "dist/hilbert-curve.esm.js",
-  "unpkg": "dist/hilbert-curve.umd.min.js",
-  "jsdelivr": "dist/hilbert-curve.umd.min.js",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
+  "commonjs": "dist/index.cjs",
+  "exports": {
+      ".": {
+          "import": "./src/index.mjs",
+          "require": "./dist/index.cjs"
+      },
+      "./package.json": {
+          "import": "./package.json",
+          "require": "./package.json"
+      },
+      "./src/index.mjs": {
+          "import": "./src/index.mjs",
+          "require": "./dist/index.cjs"
+      },
+      "./dist/index.cjs": {
+          "import": "./src/index.mjs",
+          "require": "./dist/index.cjs"
+      }
+  },
+  "moka": {
+      "firefox": {
+          "engine": "@open-automaton/playwright-mining-engine",
+          "options": {
+              "type": "firefox"
+          }
+      },
+      "chrome": {
+          "engine": "@open-automaton/playwright-mining-engine",
+          "options": {
+              "type": "chromium"
+          }
+      },
+      "safari": {
+          "engine": "@open-automaton/playwright-mining-engine",
+          "options": {
+              "type": "webkit"
+          }
+      },
+      "stub": "node_modules/@open-automaton/moka/src/stub.mjs",
+      "stubs": [
+          "express",
+          "module",
+          "os",
+          "fs",
+          "path"
+      ],
+      "shims": {
+          "chai": "node_modules/chai/chai.js",
+          "browser-or-node": "node_modules/browser-or-node/src/index.js"
+      }
+  },
   "scripts": {
-    "build": "rollup -c",
-    "pretest": "npm run build",
-    "release": "npx np",
-    "test": "jest",
-    "version": "npm run build"
+      "lint": "eslint src/*.mjs test/*.mjs",
+      "test": "npm run import-test; npm run browser-test; npm run require-test",
+      "dynamic-test": "mocha test/dynamic-test.mjs",
+      "import-test": "mocha test/test.mjs",
+      "require-test": "mocha test/test.cjs",
+      "build-commonjs": "./node_modules/@environment-safe/commonjs-builder/bin/build.mjs",
+      "local-server": "open 'http://localhost:8085/' ; npx http-server -p 8085",
+      "headless-browser-test": "npm run headless-chrome-test; npm run headless-firefox-test; npm run headless-safari-test",
+      "headless-chrome-test": "moka --server . --browser chrome test/test.mjs",
+      "headless-firefox-test": "moka --server . --browser firefox test/test.mjs",
+      "headless-safari-test": "moka --server . --browser safari test/test.mjs",
+      "browser-test": "moka --server . --local-browser test/test.mjs",
+      "container-test": "docker build . -t environment-safe-package.json -f ./containers/test.dockerfile; docker logs --follow \"$(docker run -d environment-safe-package.json)\"",
+      "build-docs": "build-jsdoc docs",
+      "build-types": "build-jsdoc types",
+      "add-generated-files-to-commit": "git add docs/*.md; git add src/*.d.ts; git add dist/*.cjs",
+      "prepare": "husky install"
   },
   "keywords": [
     "fractal",
@@ -30,16 +91,21 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "camelcase": "^5.3.1",
-    "jest": "^24.9.0",
-    "rollup": "^1.28.0",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^5.1.3"
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.22.5",
+    "@environment-safe/chai": "^0.2.0",
+    "@environment-safe/commonjs-builder": "^0.0.3",
+    "@environment-safe/jsdoc-builder": "^0.0.2",
+    "@open-automaton/moka": "^0.5.2",
+    "babel-plugin-search-and-replace": "^1.1.1",
+    "babel-plugin-transform-import-meta": "^2.2.0",
+    "chai": "^4.3.7",
+    "eslint": "^8.43.0",
+    "husky": "^8.0.3",
+    "mocha": "^10.2.0"
   },
   "dependencies": {
-    "@mhyfritz/bin-data": "0.0.3"
+    "browser-or-node": "^2.1.1"
   }
 }

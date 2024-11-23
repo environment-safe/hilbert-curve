@@ -1,6 +1,8 @@
-[![GitHub Actions status | mhyfritz/hilbert-curve](https://github.com/mhyfritz/hilbert-curve/workflows/Unit%20tests/badge.svg)](https://github.com/mhyfritz/hilbert-curve/actions?workflow=Unit+tests)
-
 # Hilbert curve mapping
+
+Hilbert curve implementation adapted from []() but written in ESM and executable from source in both the browser and server with a test suite that runs in node, chrome, safari and firefox. No Dependencies.
+
+(Examples are not currently reimplemented)
 
 ## Installation
 
@@ -14,20 +16,17 @@ Node / module bundlers
 
 ```javascript
 const hilbertCurve = require("hilbert-curve");
-
 // or
-
 import * as hilbertCurve from "hilbert-curve";
 ```
 
 Browser:
 
 ```html
-<!-- unpkg -->
-<script src="https://unpkg.com/hilbert-curve"></script>
-
-<!-- jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/hilbert-curve"></script>
+<script type="importmap">{ "imports" :{
+"browser-or-node":"https://unpkg.com/browser-or-node@2.1.1/src/index.js", 
+"@environment-safe/hilbert-curve":"https://unpkg.com/browser-or-node@2.1.1/src/index.js"
+}}</script>
 ```
 
 ![Hilbert Curve Numbering](./hilbert-curve-numbering.png)
@@ -86,4 +85,4 @@ hilbertCurve.construct(data, 2);
 //  6  7 10 11
 ```
 
-[Try `hilbert-curve` in your browser.](https://npm.runkit.com/hilbert-curve)
+[//]: # [Try `hilbert-curve` in your browser.](https://npm.runkit.com/hilbert-curve)
